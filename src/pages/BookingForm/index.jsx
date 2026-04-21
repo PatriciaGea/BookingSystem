@@ -3,14 +3,14 @@ import './style.css'
 import api from '../../services/api'
 
 function BookingForm() {
-  const [serviceSize, setServiceSize] = useState('pequeno')
+  const [serviceSize, setServiceSize] = useState('small')
   const [bookingDate, setBookingDate] = useState('')
   const [bookingTime, setBookingTime] = useState('')
   const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [occupiedTimes, setOccupiedTimes] = useState([])
 
-  // Horários disponíveis (8h às 18h)
+  // Available slots from 08:00 to 18:00.
   const availableTimes = [
     '08:00', '09:00', '10:00', '11:00', '12:00', 
     '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'
@@ -21,7 +21,7 @@ function BookingForm() {
     setTimeout(() => setMessage(''), 4000)
   }
 
-  // Busca horários ocupados quando a data é selecionada
+  // Load occupied time slots when date changes.
   useEffect(() => {
     if (bookingDate) {
       loadOccupiedTimes(bookingDate)
@@ -30,7 +30,7 @@ function BookingForm() {
     }
   }, [bookingDate])
 
-  // Busca horários já agendados para a data selecionada
+  // Fetch existing bookings for selected date.
   async function loadOccupiedTimes(date) {
     try {
       const token = localStorage.getItem('token')
@@ -40,12 +40,11 @@ function BookingForm() {
         }
       })
       
-      // Extrai apenas os horários ocupados
       const times = response.data.map(booking => booking.bookingTime)
       setOccupiedTimes(times)
       
     } catch (error) {
-      console.error('Erro ao carregar horários:', error)
+      console.error('Error loading occupied times:', error)
     }
   }
 
@@ -53,13 +52,12 @@ function BookingForm() {
     e.preventDefault()
     
     if (!serviceSize || !bookingDate || !bookingTime) {
-      showMessage('Por favor, preencha todos os campos')
+      showMessage('Please fill in all fields')
       return
     }
 
-    // Verifica se o horário está ocupado
     if (occupiedTimes.includes(bookingTime)) {
-      showMessage('Este horário já está ocupado. Escolha outro.')
+      showMessage('This slot is already occupied. Please pick another one.')
       return
     }
 
@@ -67,57 +65,55 @@ function BookingForm() {
     try {
       const token = localStorage.getItem('token')
       
-      // Faz requisição POST para criar agendamento
       await api.post('/bookings', {
         serviceSize,
         bookingDate,
         bookingTime
       }, {
         headers: {
-          Authorization: `Bearer ${token}` // Envia JWT no header
+          Authorization: `Bearer ${token}`
         }
       })
 
-      showMessage('Agendamento criado com sucesso! Email de confirmação enviado.')
+      showMessage('Booking created successfully! Confirmation email sent.')
       
-      // Limpa o formulário
-      setServiceSize('pequeno')
+      setServiceSize('small')
       setBookingDate('')
       setBookingTime('')
       setOccupiedTimes([])
       
     } catch (error) {
-      console.error('Erro ao criar agendamento:', error)
-      const errorMsg = error.response?.data?.message || 'Erro ao criar agendamento'
+      console.error('Error creating booking:', error)
+      const errorMsg = error.response?.data?.message || 'Error creating booking'
       showMessage(errorMsg)
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Obtém a data mínima (hoje)
+  // Minimum date allowed is today.
   const today = new Date().toISOString().split('T')[0]
 
   return (
     <div className="booking-container">
       <form onSubmit={handleCreateBooking}>
-        <h2>Novo Agendamento</h2>
+        <h2>New Booking</h2>
 
         <div className="form-group">
-          <label>Tamanho do Serviço:</label>
+          <label>Service Size:</label>
           <select 
             value={serviceSize} 
             onChange={(e) => setServiceSize(e.target.value)}
             disabled={isLoading}
           >
-            <option value="pequeno">Pequeno</option>
-            <option value="medio">Médio</option>
-            <option value="grande">Grande</option>
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
           </select>
         </div>
 
         <div className="form-group">
-          <label>Data:</label>
+          <label>Date:</label>
           <input
             type="date"
             value={bookingDate}
@@ -128,20 +124,20 @@ function BookingForm() {
         </div>
 
         <div className="form-group">
-          <label>Horário:</label>
+          <label>Time:</label>
           <select 
             value={bookingTime} 
             onChange={(e) => setBookingTime(e.target.value)}
             disabled={isLoading || !bookingDate}
           >
-            <option value="">Selecione um horário</option>
+            <option value="">Select a time</option>
             {availableTimes.map(time => (
               <option 
                 key={time} 
                 value={time}
                 disabled={occupiedTimes.includes(time)}
               >
-                {time} {occupiedTimes.includes(time) ? '(Ocupado)' : ''}
+                {time} {occupiedTimes.includes(time) ? '(Occupied)' : ''}
               </option>
             ))}
           </select>
@@ -149,12 +145,12 @@ function BookingForm() {
 
         {bookingDate && occupiedTimes.length > 0 && (
           <div className="info-box">
-            <p>Horários ocupados neste dia: {occupiedTimes.join(', ')}</p>
+            <p>Occupied time slots on this date: {occupiedTimes.join(', ')}</p>
           </div>
         )}
 
         <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Agendando...' : 'Agendar'}
+          {isLoading ? 'Booking...' : 'Book Now'}
         </button>
 
         {message && <p className="message">{message}</p>}

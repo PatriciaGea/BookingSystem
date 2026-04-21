@@ -18,47 +18,43 @@ function Register({ onRegisterSuccess, onSwitchToLogin }) {
   async function handleRegister(e) {
     e.preventDefault()
     
-    // Validações
     if (!name || !email || !password || !confirmPassword) {
-      showMessage('Por favor, preencha todos os campos')
+      showMessage('Please fill in all fields')
       return
     }
 
     if (password !== confirmPassword) {
-      showMessage('As senhas não coincidem')
+      showMessage('Passwords do not match')
       return
     }
 
     if (password.length < 6) {
-      showMessage('A senha deve ter no mínimo 6 caracteres')
+      showMessage('Password must have at least 6 characters')
       return
     }
 
     setIsLoading(true)
     try {
-      // Faz requisição POST para /auth/register
       await api.post('/auth/register', {
         name,
         email,
         password
       })
 
-      showMessage('Cadastro realizado com sucesso! Redirecionando para login...')
+      showMessage('Account created successfully! Redirecting to login...')
       
-      // Limpa os campos
       setName('')
       setEmail('')
       setPassword('')
       setConfirmPassword('')
 
-      // Redireciona para login após 1.5s
       setTimeout(() => {
         onSwitchToLogin()
       }, 1500)
       
     } catch (error) {
-      console.error('Erro ao registrar:', error)
-      const errorMsg = error.response?.data?.message || 'Erro ao criar conta'
+      console.error('Error while registering:', error)
+      const errorMsg = error.response?.data?.message || 'Could not create account'
       showMessage(errorMsg)
     } finally {
       setIsLoading(false)
@@ -68,11 +64,11 @@ function Register({ onRegisterSuccess, onSwitchToLogin }) {
   return (
     <div className="container">
       <form onSubmit={handleRegister}>
-        <h1>Criar Conta</h1>
+        <h1>Create Account</h1>
 
         <input
           type="text"
-          placeholder="Nome completo"
+          placeholder="Full name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           disabled={isLoading}
@@ -88,7 +84,7 @@ function Register({ onRegisterSuccess, onSwitchToLogin }) {
 
         <input
           type="password"
-          placeholder="Senha (mínimo 6 caracteres)"
+          placeholder="Password (minimum 6 characters)"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={isLoading}
@@ -96,14 +92,14 @@ function Register({ onRegisterSuccess, onSwitchToLogin }) {
 
         <input
           type="password"
-          placeholder="Confirmar senha"
+          placeholder="Confirm password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           disabled={isLoading}
         />
 
         <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Cadastrando...' : 'Cadastrar'}
+          {isLoading ? 'Creating account...' : 'Create Account'}
         </button>
 
         <button 
@@ -112,7 +108,7 @@ function Register({ onRegisterSuccess, onSwitchToLogin }) {
           onClick={onSwitchToLogin}
           disabled={isLoading}
         >
-          Já tem conta? Faça login
+          Already have an account? Sign in
         </button>
 
         {message && <p className="message">{message}</p>}

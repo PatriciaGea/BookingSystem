@@ -3,12 +3,12 @@ const dns = require("node:dns").promises
 dns.setServers(["1.1.1.1"])
 const mongoose = require("mongoose")
 
-// Modelo de usuário com autenticação
+// User model with authentication support.
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  // Para login social, o passwordHash pode ser vazio.
-  passwordHash: { type: String, default: "" }, // Senha criptografada
+  // For social login users, passwordHash can be empty.
+  passwordHash: { type: String, default: "" }, // Hashed password
   authProvider: { type: String, default: "local" },
   createdAt: { type: Date, default: Date.now }
 })

@@ -7,7 +7,7 @@
 body {
   min-height: 100vh;
   width: 100vw;
-  background: linear-gradient(180deg, #323252 0%, #4d4b85 100%);
+  background: linear-gradient(180deg, #111111 0%, #2d2d2d 100%);
   background-attachment: fixed;
   color: #ffffff;
 }

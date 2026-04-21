@@ -41,7 +41,7 @@ input, select {
 
 input:focus, select:focus {
   outline: none;
-  border-color: #4CAF50;
+  border-color: #444;
 }
 
 select option:disabled {
@@ -50,17 +50,17 @@ select option:disabled {
 }
 
 .info-box {
-  background-color: #fff3cd;
-  border: 1px solid #ffc107;
+  background-color: #ececec;
+  border: 1px solid #bcbcbc;
   border-radius: 4px;
   padding: 10px;
   font-size: 13px;
-  color: #856404;
+  color: #333;
 }
 
 button {
   padding: 14px;
-  background-color: #4CAF50;
+  background-color: #1f1f1f;
   color: white;
   border: none;
   border-radius: 4px;
@@ -71,7 +71,7 @@ button {
 }
 
 button:hover:not(:disabled) {
-  background-color: #45a049;
+  background-color: #000;
 }
 
 button:disabled {
@@ -82,9 +82,9 @@ button:disabled {
 .message {
   text-align: center;
   padding: 12px;
-  background-color: #d4edda;
-  border: 1px solid #c3e6cb;
-  color: #155724;
+  background-color: #efefef;
+  border: 1px solid #c8c8c8;
+  color: #1f1f1f;
   border-radius: 4px;
   font-size: 14px;
 }

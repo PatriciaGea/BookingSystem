@@ -160,7 +160,7 @@ function Home() {
           {users.map((user) => (
             <article key={user._id || user.id} className='user-card'>
               <div>
-                <UserField label="Nome:" value={user.name} />
+                <UserField label="Name:" value={user.name} />
                 <UserField label="Email:" value={user.email} />
                 <UserField label="Age:" value={user.age} />
               </div>

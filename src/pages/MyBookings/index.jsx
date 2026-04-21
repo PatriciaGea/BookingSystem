@@ -12,18 +12,17 @@ function MyBookings() {
     setTimeout(() => setMessage(''), 3000)
   }
 
-  // Carrega os agendamentos ao montar o componente
+  // Load bookings once on mount.
   useEffect(() => {
     loadMyBookings()
   }, [])
 
-  // Busca os agendamentos do usuário logado
+  // Fetch bookings for authenticated user.
   async function loadMyBookings() {
     setIsLoading(true)
     try {
       const token = localStorage.getItem('token')
       
-      // Faz GET para /bookings/my (rota que retorna apenas do usuário logado)
       const response = await api.get('/bookings/my', {
         headers: {
           Authorization: `Bearer ${token}`
@@ -33,19 +32,19 @@ function MyBookings() {
       setBookings(response.data)
       
       if (response.data.length === 0) {
-        showMessage('Você ainda não tem agendamentos')
+        showMessage('You do not have any bookings yet')
       }
     } catch (error) {
-      console.error('Erro ao carregar agendamentos:', error)
-      showMessage('Erro ao carregar agendamentos')
+      console.error('Error loading bookings:', error)
+      showMessage('Error loading bookings')
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Cancela um agendamento
+  // Cancel selected booking.
   async function handleCancelBooking(bookingId) {
-    if (!window.confirm('Deseja realmente cancelar este agendamento?')) {
+    if (!window.confirm('Do you really want to cancel this booking?')) {
       return
     }
 
@@ -58,55 +57,57 @@ function MyBookings() {
         }
       })
 
-      // Remove o agendamento da lista
       setBookings(bookings.filter(b => b._id !== bookingId))
-      showMessage('Agendamento cancelado com sucesso')
+      showMessage('Booking cancelled successfully')
       
     } catch (error) {
-      console.error('Erro ao cancelar agendamento:', error)
-      showMessage('Erro ao cancelar agendamento')
+      console.error('Error cancelling booking:', error)
+      showMessage('Error cancelling booking')
     }
   }
 
-  // Formata a data para exibição (YYYY-MM-DD para DD/MM/YYYY)
+  // Format date as DD/MM/YYYY.
   function formatDate(dateString) {
     const [year, month, day] = dateString.split('-')
     return `${day}/${month}/${year}`
   }
 
-  // Traduz o tamanho do serviço para exibição
+  // Normalize service size for display.
   function translateServiceSize(size) {
     const translations = {
-      'pequeno': 'Pequeno',
-      'medio': 'Médio',
-      'grande': 'Grande'
+      pequeno: 'Small',
+      medio: 'Medium',
+      grande: 'Large',
+      small: 'Small',
+      medium: 'Medium',
+      large: 'Large'
     }
     return translations[size] || size
   }
 
   return (
     <div className="my-bookings-container">
-      <h2>Meus Agendamentos</h2>
+      <h2>My Bookings</h2>
 
       {isLoading ? (
-        <p className="loading">Carregando...</p>
+        <p className="loading">Loading...</p>
       ) : bookings.length === 0 ? (
-        <p className="no-bookings">Você ainda não tem agendamentos</p>
+        <p className="no-bookings">You do not have any bookings yet</p>
       ) : (
         <div className="bookings-list">
           {bookings.map(booking => (
             <div key={booking._id} className="booking-card">
               <div className="booking-info">
                 <div className="info-row">
-                  <span className="label">Data:</span>
+                  <span className="label">Date:</span>
                   <span className="value">{formatDate(booking.bookingDate)}</span>
                 </div>
                 <div className="info-row">
-                  <span className="label">Horário:</span>
+                  <span className="label">Time:</span>
                   <span className="value">{booking.bookingTime}</span>
                 </div>
                 <div className="info-row">
-                  <span className="label">Serviço:</span>
+                  <span className="label">Service:</span>
                   <span className="value">{translateServiceSize(booking.serviceSize)}</span>
                 </div>
               </div>
@@ -114,7 +115,7 @@ function MyBookings() {
                 className="cancel-btn"
                 onClick={() => handleCancelBooking(booking._id)}
               >
-                Cancelar
+                Cancel
               </button>
             </div>
           ))}
@@ -128,7 +129,7 @@ function MyBookings() {
         onClick={loadMyBookings}
         disabled={isLoading}
       >
-        Atualizar Lista
+        Refresh List
       </button>
     </div>
   )

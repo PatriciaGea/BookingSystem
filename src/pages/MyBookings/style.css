@@ -64,7 +64,7 @@ h2 {
 
 .cancel-btn {
   padding: 10px 20px;
-  background-color: #f44336;
+  background-color: #3a3a3a;
   color: white;
   border: none;
   border-radius: 4px;
@@ -75,13 +75,13 @@ h2 {
 }
 
 .cancel-btn:hover {
-  background-color: #da190b;
+  background-color: #1f1f1f;
 }
 
 .refresh-btn {
   width: 100%;
   padding: 12px;
-  background-color: #008CBA;
+  background-color: #1f1f1f;
   color: white;
   border: none;
   border-radius: 4px;
@@ -91,7 +91,7 @@ h2 {
 }
 
 .refresh-btn:hover:not(:disabled) {
-  background-color: #007399;
+  background-color: #000;
 }
 
 .refresh-btn:disabled {
@@ -102,9 +102,9 @@ h2 {
 .message {
   text-align: center;
   padding: 12px;
-  background-color: #d4edda;
-  border: 1px solid #c3e6cb;
-  color: #155724;
+  background-color: #efefef;
+  border: 1px solid #c8c8c8;
+  color: #222;
   border-radius: 4px;
   margin: 15px 0;
 }

@@ -31,14 +31,14 @@ app.get("/health", (_req, res) => {
 	res.status(200).json({ status: "ok" })
 })
 
-// Rotas de autenticação (públicas)
+// Public authentication routes.
 app.use("/auth", authRoutes)
 
-// Rotas de usuários (mantidas para compatibilidade)
+// User routes kept for backward compatibility.
 app.use("/users", userRoutes)
 app.use("/routes/users", userRoutes)
 
-// Rotas de agendamentos (protegidas por JWT)
+// Booking routes protected by JWT.
 app.use("/bookings", bookingRoutes)
 
 

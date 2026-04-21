@@ -5,13 +5,13 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 
-// Componente principal que gerencia autenticação e navegação
+// Main component that handles authentication and navigation
 function App() {
   const [currentView, setCurrentView] = useState('login') // 'login', 'register', 'dashboard'
   const [user, setUser] = useState(null)
   const [authMessage, setAuthMessage] = useState('')
 
-  // Verifica se há um usuário logado ao carregar a aplicação
+  // Check if a user session exists when app loads.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const oauthToken = params.get('token')
@@ -25,7 +25,7 @@ function App() {
       window.history.replaceState({}, document.title, `${cleanUrl.pathname}${cleanUrl.hash}`)
     }
 
-    // Fluxo de retorno do OAuth: persiste token e limpa querystring.
+    // OAuth return flow: save token and clean query params.
     if (oauthToken && oauthUser) {
       try {
         const parsedUser = JSON.parse(oauthUser)
@@ -37,14 +37,14 @@ function App() {
         cleanLocation()
         return
       } catch (error) {
-        console.error('Erro ao processar OAuth:', error)
-        setAuthMessage('Nao foi possivel concluir o login com Google')
+        console.error('Error processing OAuth:', error)
+        setAuthMessage('Could not complete Google sign-in')
         cleanLocation()
       }
     }
 
     if (oauthError) {
-      setAuthMessage('Nao foi possivel concluir o login com Google')
+      setAuthMessage('Could not complete Google sign-in')
       cleanLocation()
     }
 
@@ -56,24 +56,24 @@ function App() {
         setUser(JSON.parse(savedUser))
         setCurrentView('dashboard')
       } catch (error) {
-        console.error('Erro ao carregar usuário:', error)
+        console.error('Error loading user session:', error)
         handleLogout()
       }
     }
   }, [])
 
-  // Função chamada após login bem-sucedido
+  // Called after successful login.
   function handleLoginSuccess(userData) {
     setUser(userData)
     setCurrentView('dashboard')
   }
 
-  // Função chamada após registro bem-sucedido (redireciona para login)
+  // Called after successful register.
   function handleRegisterSuccess() {
     setCurrentView('login')
   }
 
-  // Função para fazer logout
+  // Clears local session and returns to login.
   function handleLogout() {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
@@ -81,7 +81,7 @@ function App() {
     setCurrentView('login')
   }
 
-  // Renderiza o componente apropriado baseado no estado
+  // Render the current screen based on app state.
   return (
     <>
       {currentView === 'login' && (

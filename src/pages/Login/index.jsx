@@ -23,32 +23,29 @@ function Login({ authMessage, onLoginSuccess, onSwitchToRegister }) {
     e.preventDefault()
     
     if (!email || !password) {
-      showMessage('Por favor, preencha email e senha')
+      showMessage('Please fill in email and password')
       return
     }
 
     setIsLoading(true)
     try {
-      // Faz requisição POST para /auth/login
       const response = await api.post('/auth/login', {
         email,
         password
       })
 
-      // Salva o token JWT no localStorage
       localStorage.setItem('token', response.data.token)
       localStorage.setItem('user', JSON.stringify(response.data.user))
 
-      showMessage('Login realizado com sucesso!')
+      showMessage('Login successful!')
       
-      // Chama callback de sucesso após 500ms
       setTimeout(() => {
         onLoginSuccess(response.data.user)
       }, 500)
       
     } catch (error) {
-      console.error('Erro ao fazer login:', error)
-      const errorMsg = error.response?.data?.message || 'Erro ao fazer login'
+      console.error('Error during login:', error)
+      const errorMsg = error.response?.data?.message || 'Login failed'
       showMessage(errorMsg)
     } finally {
       setIsLoading(false)
@@ -61,9 +58,12 @@ function Login({ authMessage, onLoginSuccess, onSwitchToRegister }) {
   }
 
   return (
-    <div className="container">
-      <form onSubmit={handleLogin}>
-        <h1>Login</h1>
+    <div className="container login-layout">
+      <form onSubmit={handleLogin} className="login-card">
+        <h1>Sign In</h1>
+        <p className="login-instruction">
+          This is a booking system. You need to log in first.
+        </p>
 
         <input
           type="email"
@@ -75,14 +75,14 @@ function Login({ authMessage, onLoginSuccess, onSwitchToRegister }) {
 
         <input
           type="password"
-          placeholder="Senha"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={isLoading}
         />
 
         <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Entrando...' : 'Entrar'}
+          {isLoading ? 'Signing in...' : 'Sign In'}
         </button>
 
         <button
@@ -91,7 +91,8 @@ function Login({ authMessage, onLoginSuccess, onSwitchToRegister }) {
           onClick={handleGoogleLogin}
           disabled={isLoading}
         >
-          Entrar com Google
+          <span className="google-icon" aria-hidden="true">G</span>
+          Sign in with Google
         </button>
 
         <button 
@@ -100,11 +101,23 @@ function Login({ authMessage, onLoginSuccess, onSwitchToRegister }) {
           onClick={onSwitchToRegister}
           disabled={isLoading}
         >
-          Não tem conta? Cadastre-se
+          No account yet? Create one
         </button>
 
         {message && <p className="message">{message}</p>}
       </form>
+
+      <aside className="project-info">
+        <h2>Project Credits</h2>
+        <p>
+          Booking System project by <strong>Patricia Gea</strong>.
+        </p>
+        <div className="contact-links">
+          <a href="https://github.com/PatriciaGea" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/patriciageafrontend/" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="mailto:patricia.rodrigues@hyperisland.se">Email</a>
+        </div>
+      </aside>
     </div>
   )
 }

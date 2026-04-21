@@ -4,16 +4,16 @@ import BookingForm from '../BookingForm'
 import MyBookings from '../MyBookings'
 
 function Dashboard({ user, onLogout }) {
-  const [activeTab, setActiveTab] = useState('bookings') // 'bookings' ou 'new'
+  const [activeTab, setActiveTab] = useState('bookings') // 'bookings' or 'new'
 
   return (
     <div className="dashboard">
       <header className="dashboard-header">
-        <h1>Sistema de Agendamento</h1>
+        <h1>Booking System</h1>
         <div className="user-info">
-          <span>Bem-vindo, {user?.name || 'Usuário'}</span>
+          <span>Welcome, {user?.name || 'User'}</span>
           <button className="logout-btn" onClick={onLogout}>
-            Sair
+            Sign Out
           </button>
         </div>
       </header>
@@ -23,13 +23,13 @@ function Dashboard({ user, onLogout }) {
           className={activeTab === 'new' ? 'active' : ''}
           onClick={() => setActiveTab('new')}
         >
-          Novo Agendamento
+          New Booking
         </button>
         <button 
           className={activeTab === 'bookings' ? 'active' : ''}
           onClick={() => setActiveTab('bookings')}
         >
-          Meus Agendamentos
+          My Bookings
         </button>
       </nav>
 

@@ -7,91 +7,104 @@ const User = require("../models/user")
 const authMiddleware = require("../middleware/auth")
 const nodemailer = require("nodemailer")
 
-// Configuração do Nodemailer (usando Gmail como exemplo)
+// Nodemailer configuration (Gmail).
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER, // Email remetente (ex: seuemail@gmail.com)
-    pass: process.env.EMAIL_PASS  // Senha de aplicativo do Gmail
+    user: process.env.EMAIL_USER, // Sender email account
+    pass: process.env.EMAIL_PASS  // Gmail app password
   }
 })
 
-// Função para enviar email de confirmação
+// Send booking confirmation email.
 async function sendConfirmationEmail(userEmail, userName, booking) {
+  const serviceSizeLabel = {
+    pequeno: "Small",
+    medio: "Medium",
+    grande: "Large",
+    small: "Small",
+    medium: "Medium",
+    large: "Large"
+  }[booking.serviceSize] || booking.serviceSize
+
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: userEmail,
-    subject: "Confirmação de Agendamento",
+    subject: "Booking Confirmation",
     html: `
-      <h2>Olá ${userName}!</h2>
-      <p>Seu agendamento foi confirmado com sucesso!</p>
-      <p><strong>Data:</strong> ${booking.bookingDate}</p>
-      <p><strong>Horário:</strong> ${booking.bookingTime}</p>
-      <p><strong>Serviço:</strong> ${booking.serviceSize}</p>
+      <h2>Hello ${userName}!</h2>
+      <p>Your booking has been confirmed successfully.</p>
+      <p><strong>Date:</strong> ${booking.bookingDate}</p>
+      <p><strong>Time:</strong> ${booking.bookingTime}</p>
+      <p><strong>Service:</strong> ${serviceSizeLabel}</p>
       <br>
-      <p>Obrigado por agendar conosco!</p>
+      <p>Thank you for booking with us.</p>
     `
   }
 
   try {
     await transporter.sendMail(mailOptions)
-    console.log("Email de confirmação enviado para:", userEmail)
+    console.log("Confirmation email sent to:", userEmail)
   } catch (error) {
-    console.error("Erro ao enviar email:", error)
-    // Não bloqueia o agendamento se o email falhar
+    console.error("Error sending email:", error)
+    // Do not block booking creation if email fails.
   }
 }
 
-// POST /bookings - Cria novo agendamento (rota protegida)
+// POST /bookings - Create new booking (protected route)
 router.post("/", authMiddleware, async (req, res) => {
   try {
-    const { serviceSize, bookingDate, bookingTime } = req.body
-    const userId = req.userId // Vem do middleware de autenticação
+    const { bookingDate, bookingTime } = req.body
+    const userId = req.userId
 
-    // Validação de campos obrigatórios
-    if (!serviceSize || !bookingDate || !bookingTime) {
-      return res.status(400).json({ message: "Todos os campos são obrigatórios" })
+    const normalizedServiceSize = {
+      pequeno: "small",
+      medio: "medium",
+      grande: "large",
+      small: "small",
+      medium: "medium",
+      large: "large"
+    }[req.body.serviceSize]
+
+    // Validate required fields.
+    if (!normalizedServiceSize || !bookingDate || !bookingTime) {
+      return res.status(400).json({ message: "All fields are required" })
     }
 
-    // Validação do tamanho do serviço
-    if (!["pequeno", "medio", "grande"].includes(serviceSize)) {
-      return res.status(400).json({ message: "Tamanho de serviço inválido" })
-    }
-
-    // Verifica conflito de horário (outro agendamento na mesma data/hora)
+    // Check schedule conflict for same date/time.
     const conflict = await Booking.findOne({ bookingDate, bookingTime })
     if (conflict) {
       return res.status(409).json({ 
-        message: "Este horário já está ocupado. Por favor, escolha outro." 
+        message: "This time slot is already occupied. Please choose another." 
       })
     }
 
-    // Cria o agendamento
+    // Create booking.
     const booking = new Booking({
       userId,
-      serviceSize,
+      serviceSize: normalizedServiceSize,
       bookingDate,
       bookingTime
     })
     await booking.save()
 
-    // Busca dados do usuário para enviar email
+    // Load user details for confirmation email.
     const user = await User.findById(userId)
     if (user && user.email) {
       await sendConfirmationEmail(user.email, user.name, booking)
     }
 
     res.status(201).json({ 
-      message: "Agendamento criado com sucesso", 
+      message: "Booking created successfully", 
       booking 
     })
   } catch (error) {
-    console.error("Erro ao criar agendamento:", error)
-    res.status(500).json({ message: "Erro no servidor" })
+    console.error("Error creating booking:", error)
+    res.status(500).json({ message: "Server error" })
   }
 })
 
-// GET /bookings - Retorna os agendamentos do usuário logado
+// GET /bookings - Return bookings for logged user or selected date.
 router.get("/", authMiddleware, async (req, res) => {
   try {
     const userId = req.userId
@@ -99,26 +112,25 @@ router.get("/", authMiddleware, async (req, res) => {
 
     let filter = {}
 
-    // Se foi passada uma data específica, filtra por ela
+    // Filter by date when provided.
     if (date) {
       filter.bookingDate = date
     } else {
-      // Senão, retorna apenas os bookings do usuário logado
       filter.userId = userId
     }
 
     const bookings = await Booking.find(filter)
-      .populate("userId", "name email") // Inclui dados do usuário
-      .sort({ bookingDate: 1, bookingTime: 1 }) // Ordena por data e hora
+      .populate("userId", "name email")
+      .sort({ bookingDate: 1, bookingTime: 1 })
 
     res.status(200).json(bookings)
   } catch (error) {
-    console.error("Erro ao buscar agendamentos:", error)
-    res.status(500).json({ message: "Erro no servidor" })
+    console.error("Error loading bookings:", error)
+    res.status(500).json({ message: "Server error" })
   }
 })
 
-// GET /bookings/my - Retorna apenas os agendamentos do usuário logado
+// GET /bookings/my - Return only logged user bookings.
 router.get("/my", authMiddleware, async (req, res) => {
   try {
     const userId = req.userId
@@ -128,30 +140,30 @@ router.get("/my", authMiddleware, async (req, res) => {
 
     res.status(200).json(bookings)
   } catch (error) {
-    console.error("Erro ao buscar agendamentos:", error)
-    res.status(500).json({ message: "Erro no servidor" })
+    console.error("Error loading bookings:", error)
+    res.status(500).json({ message: "Server error" })
   }
 })
 
-// DELETE /bookings/:id - Cancela um agendamento
+// DELETE /bookings/:id - Cancel booking.
 router.delete("/:id", authMiddleware, async (req, res) => {
   try {
     const userId = req.userId
     const bookingId = req.params.id
 
-    // Busca o agendamento e verifica se pertence ao usuário
+    // Verify ownership before deleting.
     const booking = await Booking.findOne({ _id: bookingId, userId })
     
     if (!booking) {
-      return res.status(404).json({ message: "Agendamento não encontrado" })
+      return res.status(404).json({ message: "Booking not found" })
     }
 
     await Booking.findByIdAndDelete(bookingId)
     
-    res.status(200).json({ message: "Agendamento cancelado com sucesso" })
+    res.status(200).json({ message: "Booking cancelled successfully" })
   } catch (error) {
-    console.error("Erro ao cancelar agendamento:", error)
-    res.status(500).json({ message: "Erro no servidor" })
+    console.error("Error cancelling booking:", error)
+    res.status(500).json({ message: "Server error" })
   }
 })
 

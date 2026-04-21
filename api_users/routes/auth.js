@@ -32,14 +32,14 @@ passport.use(
       try {
         const email = profile.emails?.[0]?.value
         if (!email) {
-          return done(new Error("Google não retornou email"), null)
+          return done(new Error("Google did not return an email"), null)
         }
 
-        // Procura o usuário; se não existir, cria automaticamente.
+        // Find user by email and auto-create when missing.
         let user = await User.findOne({ email })
         if (!user) {
           user = new User({
-            name: profile.displayName || "Usuário Google",
+            name: profile.displayName || "Google User",
             email,
             passwordHash: "",
             authProvider: "google"
@@ -55,26 +55,26 @@ passport.use(
   )
 )
 
-// POST /register - Cria novo usuário com senha criptografada
+// POST /register - Create user with hashed password
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body
     
-    // Validação de campos obrigatórios
+    // Validate required fields.
     if (!name || !email || !password) {
-      return res.status(400).json({ message: "Nome, email e senha são obrigatórios" })
+      return res.status(400).json({ message: "Name, email, and password are required" })
     }
 
-    // Verifica se o email já está cadastrado
+    // Check if user already exists.
     const userExists = await User.findOne({ email })
     if (userExists) {
-      return res.status(409).json({ message: "Email já cadastrado" })
+      return res.status(409).json({ message: "Email already registered" })
     }
 
-    // Criptografa a senha com bcrypt (10 rounds de salt)
+    // Hash password using bcrypt.
     const passwordHash = await bcrypt.hash(password, 10)
 
-    // Cria o novo usuário
+    // Create and save user.
     const user = new User({ 
       name, 
       email, 
@@ -83,42 +83,42 @@ router.post("/register", async (req, res) => {
     await user.save()
 
     res.status(201).json({ 
-      message: "Usuário criado com sucesso", 
+      message: "User created successfully", 
       userId: user._id 
     })
   } catch (error) {
-    console.error("Erro ao registrar usuário:", error)
-    res.status(500).json({ message: "Erro no servidor" })
+    console.error("Error registering user:", error)
+    res.status(500).json({ message: "Server error" })
   }
 })
 
-// POST /login - Autentica usuário e retorna JWT
+// POST /login - Authenticate user and return JWT
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body
     
-    // Validação de campos obrigatórios
+    // Validate required fields.
     if (!email || !password) {
-      return res.status(400).json({ message: "Email e senha são obrigatórios" })
+      return res.status(400).json({ message: "Email and password are required" })
     }
 
-    // Busca usuário pelo email
+    // Find user by email.
     const user = await User.findOne({ email })
     if (!user) {
-      return res.status(401).json({ message: "Email ou senha incorretos" })
+      return res.status(401).json({ message: "Invalid email or password" })
     }
 
     if (!user.passwordHash) {
-      return res.status(401).json({ message: "Use login com Google para esta conta" })
+      return res.status(401).json({ message: "Use Google sign-in for this account" })
     }
 
-    // Compara a senha fornecida com o hash armazenado
+    // Compare submitted password with hash.
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash)
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Email ou senha incorretos" })
+      return res.status(401).json({ message: "Invalid email or password" })
     }
 
-    // Gera token JWT válido por 7 dias
+    // Generate JWT valid for 7 days.
     const token = jwt.sign(
       { userId: user._id }, 
       process.env.JWT_SECRET || "secret_key_default",
@@ -126,7 +126,7 @@ router.post("/login", async (req, res) => {
     )
 
     res.status(200).json({ 
-      message: "Login realizado com sucesso",
+      message: "Login successful",
       token,
       user: {
         id: user._id,
@@ -135,18 +135,18 @@ router.post("/login", async (req, res) => {
       }
     })
   } catch (error) {
-    console.error("Erro ao fazer login:", error)
-    res.status(500).json({ message: "Erro no servidor" })
+    console.error("Error logging in:", error)
+    res.status(500).json({ message: "Server error" })
   }
 })
 
-// GET /auth/google - Inicia autenticação Google OAuth
+// GET /auth/google - Start Google OAuth
 router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"], session: false })
 )
 
-// GET /auth/google/callback - Callback do Google e emissão de JWT
+// GET /auth/google/callback - Google callback and JWT issue
 router.get(
   "/google/callback",
   passport.authenticate("google", { session: false, failureRedirect: "/auth/google/failure" }),
@@ -164,7 +164,7 @@ router.get(
         email: req.user.email
       })
 
-      // Redireciona para o frontend com token para persistência local.
+      // Redirect back to frontend with token/user payload.
       return res.redirect(
         buildFrontendRedirect({
           token,
@@ -172,13 +172,13 @@ router.get(
         })
       )
     } catch (error) {
-      console.error("Erro no callback Google:", error)
+      console.error("Google callback error:", error)
       return res.redirect(buildFrontendRedirect({ oauthError: "callback_failed" }))
     }
   }
 )
 
-// GET /auth/google/failure - Tratamento de falha no login social
+// GET /auth/google/failure - Social login failure handler
 router.get("/google/failure", (_req, res) => {
   return res.redirect(buildFrontendRedirect({ oauthError: "google_auth_failed" }))
 })

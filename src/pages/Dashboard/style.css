@@ -1,10 +1,10 @@
 .dashboard {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #efefef;
 }
 
 .dashboard-header {
-  background-color: #4CAF50;
+  background-color: #121212;
   color: white;
   padding: 20px;
   display: flex;
@@ -30,7 +30,7 @@
 
 .logout-btn {
   padding: 8px 16px;
-  background-color: #f44336;
+  background-color: #4a4a4a;
   color: white;
   border: none;
   border-radius: 4px;
@@ -40,7 +40,7 @@
 }
 
 .logout-btn:hover {
-  background-color: #da190b;
+  background-color: #2e2e2e;
 }
 
 .dashboard-nav {
@@ -64,13 +64,13 @@
 }
 
 .dashboard-nav button:hover {
-  color: #4CAF50;
-  background-color: #f9f9f9;
+  color: #111;
+  background-color: #ececec;
 }
 
 .dashboard-nav button.active {
-  color: #4CAF50;
-  border-bottom-color: #4CAF50;
+  color: #111;
+  border-bottom-color: #111;
   font-weight: 600;
 }
 

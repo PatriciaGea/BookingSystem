@@ -25,12 +25,12 @@ input {
 
 input:focus {
   outline: none;
-  border-color: #4CAF50;
+  border-color: #444;
 }
 
 button {
   padding: 12px;
-  background-color: #4CAF50;
+  background-color: #1f1f1f;
   color: white;
   border: none;
   border-radius: 4px;
@@ -40,7 +40,7 @@ button {
 }
 
 button:hover:not(:disabled) {
-  background-color: #45a049;
+  background-color: #000;
 }
 
 button:disabled {
@@ -49,11 +49,11 @@ button:disabled {
 }
 
 .secondary-btn {
-  background-color: #008CBA;
+  background-color: #555;
 }
 
 .secondary-btn:hover:not(:disabled) {
-  background-color: #007399;
+  background-color: #3f3f3f;
 }
 
 .message {

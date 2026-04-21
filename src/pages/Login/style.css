@@ -1,7 +1,18 @@
 .container {
-  max-width: 400px;
+  max-width: 980px;
   margin: 50px auto;
   padding: 20px;
+}
+
+.login-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.login-card {
+  flex: 1;
+  max-width: 460px;
 }
 
 form {
@@ -13,7 +24,14 @@ form {
 h1 {
   text-align: center;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+}
+
+.login-instruction {
+  text-align: center;
+  color: #4b4b4b;
+  margin-bottom: 14px;
+  font-size: 14px;
 }
 
 input {
@@ -25,12 +43,12 @@ input {
 
 input:focus {
   outline: none;
-  border-color: #4CAF50;
+  border-color: #444;
 }
 
 button {
   padding: 12px;
-  background-color: #4CAF50;
+  background-color: #1f1f1f;
   color: white;
   border: none;
   border-radius: 4px;
@@ -40,7 +58,7 @@ button {
 }
 
 button:hover:not(:disabled) {
-  background-color: #45a049;
+  background-color: #000;
 }
 
 button:disabled {
@@ -49,19 +67,36 @@ button:disabled {
 }
 
 .secondary-btn {
-  background-color: #008CBA;
+  background-color: #555;
 }
 
 .secondary-btn:hover:not(:disabled) {
-  background-color: #007399;
+  background-color: #3f3f3f;
 }
 
 .google-btn {
-  background-color: #db4437;
+  background-color: #2b2b2b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .google-btn:hover:not(:disabled) {
-  background-color: #c53b2f;
+  background-color: #121212;
+}
+
+.google-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  color: #111;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
 }
 
 .message {
@@ -71,4 +106,55 @@ button:disabled {
   border-radius: 4px;
   color: #333;
   margin-top: 10px;
+}
+
+.project-info {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  padding: 18px;
+  width: 320px;
+  color: #222;
+}
+
+.project-info h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  color: #111;
+}
+
+.project-info p {
+  margin: 0 0 12px;
+  font-size: 14px;
+}
+
+.contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.contact-links a {
+  text-decoration: none;
+  color: #fff;
+  background: #222;
+  padding: 7px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.contact-links a:hover {
+  background: #000;
+}
+
+@media (max-width: 900px) {
+  .login-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .project-info {
+    width: 100%;
+    max-width: 460px;
+  }
 }
