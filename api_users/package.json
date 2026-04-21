@@ -1,0 +1,23 @@
+{
+  "name": "api-users",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "build": "node -e \"console.log('No build step required for api_users')\"",
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^1.13.4",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.22.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^7.1.0",
+    "mongoose": "^8.22.1",
+    "nodemailer": "^6.9.7",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0"
+  }
+}

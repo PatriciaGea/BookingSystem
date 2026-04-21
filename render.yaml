@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: react-javascript-api-backend
+    runtime: node
+    rootDir: api_users
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: GOOGLE_CALLBACK_URL
+        sync: false
+      - key: PORT
+        value: "3000"
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGINS
+        sync: false
