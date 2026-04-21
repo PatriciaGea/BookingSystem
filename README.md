@@ -155,6 +155,6 @@ Patricia Gea
 ## Contact
 
 - GitHub: https://github.com/PatriciaGea
-- LinkedIn: https://www.linkedin.com/in/patriciageafrontend/
+- LinkedIn: https://www.linkedin.com/in/patriciageadev
 - Email: patricia.rodrigues@hyperisland.se
 - Live Project: https://patriciagea.github.io/BookingSystem/
