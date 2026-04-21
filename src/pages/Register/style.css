@@ -1,66 +1,94 @@
-.container {
-  max-width: 400px;
-  margin: 50px auto;
+.register-page {
+  max-width: 520px;
+  margin: 36px auto;
   padding: 20px;
 }
 
-form {
+.register-card {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
+  background: var(--gh-surface);
+  border: 1px solid var(--gh-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(1, 4, 9, 0.22);
+  padding: 24px;
 }
 
-h1 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 20px;
+.register-card h1 {
+  text-align: left;
+  color: var(--gh-text);
+  margin-bottom: 6px;
+  font-size: 30px;
 }
 
-input {
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+.register-card input {
+  height: 42px;
+  border: 1px solid var(--gh-border);
+  border-radius: 8px;
   font-size: 14px;
+  padding: 0 12px;
+  background: var(--gh-surface-alt);
+  color: var(--gh-text);
 }
 
-input:focus {
-  outline: none;
-  border-color: #444;
+.register-card input:focus-visible {
+  outline: 3px solid rgba(56, 139, 253, 0.35);
+  outline-offset: 1px;
+  border-color: #388bfd;
 }
 
-button {
-  padding: 12px;
-  background-color: #1f1f1f;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
+.register-card button {
+  height: 42px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  color: #fff;
+  background: #2a313c;
+  transition: background-color 0.2s ease;
 }
 
-button:hover:not(:disabled) {
-  background-color: #000;
+.register-card button:hover:not(:disabled) {
+  background: #3a444f;
 }
 
-button:disabled {
-  background-color: #ccc;
+.register-card button:focus-visible {
+  outline: 3px solid rgba(56, 139, 253, 0.35);
+  outline-offset: 2px;
+}
+
+.register-card button:disabled {
+  background: #6a737d;
   cursor: not-allowed;
 }
 
-.secondary-btn {
-  background-color: #555;
+.register-card .secondary-btn {
+  background: #424a53;
 }
 
-.secondary-btn:hover:not(:disabled) {
-  background-color: #3f3f3f;
+.register-card .message {
+  text-align: left;
+  padding: 10px 12px;
+  background: #1f2733;
+  border: 1px solid var(--gh-border);
+  border-radius: 8px;
+  color: #e6edf3;
+  margin-top: 4px;
 }
 
-.message {
-  text-align: center;
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-radius: 4px;
-  color: #333;
-  margin-top: 10px;
+@media (max-width: 560px) {
+  .register-page {
+    margin: 18px auto;
+    padding: 12px;
+  }
+
+  .register-card {
+    padding: 16px;
+  }
+
+  .register-card h1 {
+    font-size: 26px;
+  }
 }

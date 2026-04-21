@@ -2,20 +2,21 @@
   max-width: 500px;
   margin: 30px auto;
   padding: 25px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background: var(--gh-surface);
+  border: 1px solid var(--gh-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(1, 4, 9, 0.24);
 }
 
-form {
+.booking-container form {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-h2 {
+.booking-container h2 {
   text-align: center;
-  color: #333;
+  color: var(--gh-text);
   margin-bottom: 10px;
 }
 
@@ -25,66 +26,75 @@ h2 {
   gap: 8px;
 }
 
-label {
+.booking-container label {
   font-weight: 600;
-  color: #555;
+  color: #c9d1d9;
   font-size: 14px;
 }
 
-input, select {
+.booking-container input,
+.booking-container select {
   padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid var(--gh-border);
+  border-radius: 8px;
   font-size: 14px;
-  background-color: white;
+  background-color: var(--gh-surface-alt);
+  color: var(--gh-text);
 }
 
-input:focus, select:focus {
-  outline: none;
-  border-color: #444;
+.booking-container input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.1);
+  cursor: pointer;
 }
 
-select option:disabled {
-  color: #999;
-  background-color: #f0f0f0;
+.booking-container input:focus-visible,
+.booking-container select:focus-visible {
+  outline: 3px solid rgba(56, 139, 253, 0.35);
+  outline-offset: 1px;
+  border-color: #388bfd;
+}
+
+.booking-container select option:disabled {
+  color: #8b949e;
+  background-color: #161b22;
 }
 
 .info-box {
-  background-color: #ececec;
-  border: 1px solid #bcbcbc;
-  border-radius: 4px;
+  background-color: #1d2733;
+  border: 1px solid #2f3c4c;
+  border-radius: 8px;
   padding: 10px;
   font-size: 13px;
-  color: #333;
+  color: #d8e2ec;
 }
 
-button {
+.booking-container button {
   padding: 14px;
-  background-color: #1f1f1f;
+  background-color: #2a313c;
   color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  border: 1px solid #3f4b58;
+  border-radius: 8px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s;
 }
 
-button:hover:not(:disabled) {
-  background-color: #000;
+.booking-container button:hover:not(:disabled) {
+  background-color: #3a444f;
 }
 
-button:disabled {
-  background-color: #ccc;
+.booking-container button:disabled {
+  background-color: #6a737d;
   cursor: not-allowed;
 }
 
 .message {
   text-align: center;
   padding: 12px;
-  background-color: #efefef;
-  border: 1px solid #c8c8c8;
-  color: #1f1f1f;
-  border-radius: 4px;
+  background-color: #1f2733;
+  border: 1px solid #2f3c4c;
+  color: #e6edf3;
+  border-radius: 8px;
   font-size: 14px;
 }

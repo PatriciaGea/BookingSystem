@@ -4,10 +4,27 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
+
+:root {
+  --gh-bg: #0d1117;
+  --gh-surface: #161b22;
+  --gh-surface-alt: #0f141a;
+  --gh-border: #30363d;
+  --gh-text: #e6edf3;
+  --gh-muted: #9da7b3;
+}
+
 body {
   min-height: 100vh;
   width: 100vw;
-  background: linear-gradient(180deg, #111111 0%, #2d2d2d 100%);
+  background: linear-gradient(180deg, #151b23 0%, var(--gh-bg) 58%);
   background-attachment: fixed;
-  color: #ffffff;
+  color: var(--gh-text);
+}
+
+input,
+button,
+select,
+textarea {
+  font: inherit;
 }

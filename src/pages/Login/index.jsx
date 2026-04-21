@@ -58,27 +58,34 @@ function Login({ authMessage, onLoginSuccess, onSwitchToRegister }) {
   }
 
   return (
-    <div className="container login-layout">
+    <div className="login-page login-layout">
       <form onSubmit={handleLogin} className="login-card">
+        <p className="eyebrow">Booking System</p>
         <h1>Sign In</h1>
         <p className="login-instruction">
-          This is a booking system. You need to log in first.
+          You need to log in first.
         </p>
 
+        <label htmlFor="login-email">Email</label>
         <input
+          id="login-email"
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={isLoading}
+          autoComplete="email"
         />
 
+        <label htmlFor="login-password">Password</label>
         <input
+          id="login-password"
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={isLoading}
+          autoComplete="current-password"
         />
 
         <button type="submit" disabled={isLoading}>
@@ -108,14 +115,31 @@ function Login({ authMessage, onLoginSuccess, onSwitchToRegister }) {
       </form>
 
       <aside className="project-info">
-        <h2>Project Credits</h2>
-        <p>
-          Booking System project by <strong>Patricia Gea</strong>.
-        </p>
+        <h2>Project by Patricia Gea</h2>
+        <p className="contact-title">Contact:</p>
         <div className="contact-links">
           <a href="https://github.com/PatriciaGea" target="_blank" rel="noreferrer">GitHub</a>
           <a href="https://www.linkedin.com/in/patriciageafrontend/" target="_blank" rel="noreferrer">LinkedIn</a>
           <a href="mailto:patricia.rodrigues@hyperisland.se">Email</a>
+        </div>
+
+        <div className="project-details">
+          <h3>About This Project</h3>
+          <p>
+            A full-stack booking system where users can create accounts, sign in,
+            book appointment slots, and manage their bookings.
+          </p>
+
+          <h3>Technologies</h3>
+          <p>React, Vite, Node.js, Express, MongoDB, JWT, Google OAuth, Nodemailer.</p>
+
+          <h3>Highlights</h3>
+          <ul>
+            <li>Secure authentication with JWT and Google sign-in</li>
+            <li>Booking conflict prevention by date and time</li>
+            <li>Responsive interface with accessible contrast</li>
+            <li>Email confirmation after successful booking</li>
+          </ul>
         </div>
       </aside>
     </div>

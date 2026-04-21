@@ -7,6 +7,23 @@ const User = require("../models/user")
 const authMiddleware = require("../middleware/auth")
 const nodemailer = require("nodemailer")
 
+const OPENING_HOUR_IN_MINUTES = 8 * 60
+const CLOSING_HOUR_IN_MINUTES = 18 * 60
+const SERVICE_DURATION_IN_MINUTES = {
+  small: 60,
+  medium: 120,
+  large: 180
+}
+
+function parseTimeToMinutes(time) {
+  const [hours, minutes] = String(time).split(":").map(Number)
+  if (!Number.isInteger(hours) || !Number.isInteger(minutes)) {
+    return null
+  }
+
+  return (hours * 60) + minutes
+}
+
 // Nodemailer configuration (Gmail).
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -69,6 +86,23 @@ router.post("/", authMiddleware, async (req, res) => {
     // Validate required fields.
     if (!normalizedServiceSize || !bookingDate || !bookingTime) {
       return res.status(400).json({ message: "All fields are required" })
+    }
+
+    const bookingStartMinutes = parseTimeToMinutes(bookingTime)
+    if (bookingStartMinutes === null) {
+      return res.status(400).json({ message: "Invalid booking time format" })
+    }
+
+    const serviceDuration = SERVICE_DURATION_IN_MINUTES[normalizedServiceSize]
+    const bookingEndMinutes = bookingStartMinutes + serviceDuration
+
+    if (
+      bookingStartMinutes < OPENING_HOUR_IN_MINUTES ||
+      bookingEndMinutes > CLOSING_HOUR_IN_MINUTES
+    ) {
+      return res.status(400).json({
+        message: "This service is too long for the selected time and exceeds available booking hours"
+      })
     }
 
     // Check schedule conflict for same date/time.

@@ -62,8 +62,8 @@ function Register({ onRegisterSuccess, onSwitchToLogin }) {
   }
 
   return (
-    <div className="container">
-      <form onSubmit={handleRegister}>
+    <div className="register-page">
+      <form onSubmit={handleRegister} className="register-card">
         <h1>Create Account</h1>
 
         <input
