@@ -6,7 +6,7 @@ Built and maintained by Patricia Gea.
 
 ## Live Deployment
 
-- Frontend: https://patriciagea.github.io/BookingSystem/
+- Frontend: https://patriciagea.github.io/booking-system/
 
 ## Project Quality Highlights
 
@@ -157,4 +157,4 @@ Patricia Gea
 - GitHub: https://github.com/PatriciaGea
 - LinkedIn: https://www.linkedin.com/in/patriciageadev
 - Email: patricia.rodrigues@hyperisland.se
-- Live Project: https://patriciagea.github.io/BookingSystem/
+- Live Project: https://patriciagea.github.io/booking-system/

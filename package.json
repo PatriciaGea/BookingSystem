@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\"",
     "start": "npm --prefix api_users install && npm --prefix api_users start",
     "lint": "eslint .",
     "preview": "vite preview"
