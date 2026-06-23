@@ -8,6 +8,7 @@ function BookingForm() {
   const [bookingTime, setBookingTime] = useState('')
   const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [loadingHint, setLoadingHint] = useState('')
   const [occupiedTimes, setOccupiedTimes] = useState([])
 
   // Available slots from 08:00 to 18:00.
@@ -20,6 +21,11 @@ function BookingForm() {
     setMessage(text)
     setTimeout(() => setMessage(''), 4000)
   }
+
+  // Wake up the API on Render free tier before the user submits.
+  useEffect(() => {
+    api.get('/health').catch(() => {})
+  }, [])
 
   // Load occupied time slots when date changes.
   useEffect(() => {
@@ -62,6 +68,11 @@ function BookingForm() {
     }
 
     setIsLoading(true)
+    setLoadingHint('Saving your booking...')
+    const slowHintTimer = setTimeout(() => {
+      setLoadingHint('Server is waking up, please wait...')
+    }, 4000)
+
     try {
       const token = localStorage.getItem('token')
       
@@ -75,7 +86,7 @@ function BookingForm() {
         }
       })
 
-      showMessage('Booking created successfully! Confirmation email sent.')
+      showMessage('Booking created successfully!')
       
       setServiceSize('small')
       setBookingDate('')
@@ -84,9 +95,18 @@ function BookingForm() {
       
     } catch (error) {
       console.error('Error creating booking:', error)
-      const errorMsg = error.response?.data?.message || 'Error creating booking'
+      let errorMsg = error.response?.data?.message || 'Error creating booking'
+
+      if (error.code === 'ECONNABORTED') {
+        errorMsg = 'Request timed out. The server may be waking up — try again in a few seconds.'
+      } else if (!error.response) {
+        errorMsg = 'Could not reach the server. Check your connection and try again.'
+      }
+
       showMessage(errorMsg)
     } finally {
+      clearTimeout(slowHintTimer)
+      setLoadingHint('')
       setIsLoading(false)
     }
   }
@@ -152,6 +172,10 @@ function BookingForm() {
         <button type="submit" disabled={isLoading}>
           {isLoading ? 'Booking...' : 'Book Now'}
         </button>
+
+        {isLoading && loadingHint && (
+          <p className="loading-hint">{loadingHint}</p>
+        )}
 
         {message && <p className="message">{message}</p>}
       </form>

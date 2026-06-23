@@ -28,9 +28,12 @@ function parseTimeToMinutes(time) {
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER, // Sender email account
-    pass: process.env.EMAIL_PASS  // Gmail app password
-  }
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  },
+  connectionTimeout: 5000,
+  greetingTimeout: 5000,
+  socketTimeout: 10000
 })
 
 // Send booking confirmation email.
@@ -122,16 +125,18 @@ router.post("/", authMiddleware, async (req, res) => {
     })
     await booking.save()
 
-    // Load user details for confirmation email.
-    const user = await User.findById(userId)
-    if (user && user.email) {
-      await sendConfirmationEmail(user.email, user.name, booking)
-    }
-
-    res.status(201).json({ 
-      message: "Booking created successfully", 
-      booking 
+    // Respond immediately; send confirmation email in the background.
+    res.status(201).json({
+      message: "Booking created successfully",
+      booking
     })
+
+    const user = await User.findById(userId)
+    if (user?.email) {
+      sendConfirmationEmail(user.email, user.name, booking).catch((error) => {
+        console.error("Background email error:", error)
+      })
+    }
   } catch (error) {
     console.error("Error creating booking:", error)
     res.status(500).json({ message: "Server error" })
